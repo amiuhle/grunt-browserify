@@ -15,6 +15,8 @@ module.exports = function (grunt) {
   grunt.registerMultiTask('browserify', 'Grunt task for browserify.', function () {
     var done = this.async();
 
+    var opts = grunt.util._.extend(this.data.options, {}) || {};
+    
     var files = this.filesSrc.map(function (file) {
       return path.resolve(file);
     });
@@ -23,6 +25,11 @@ module.exports = function (grunt) {
     b.on('error', function (err) {
       grunt.fail.warn(err);
     });
+
+    var globals = opts.globals || {};
+    for(var key in globals) {
+      b.require(globals[key], { expose: key, entry: true });
+    }
 
     if (this.data.ignore) {
       grunt.file.expand({filter: 'isFile'}, this.data.ignore)
@@ -60,7 +67,6 @@ module.exports = function (grunt) {
       });
     }
 
-    var opts = grunt.util._.extend(this.data.options, {});
     var bundle = b.bundle(opts);
     bundle.on('error', function (err) {
       grunt.fail.warn(err);
