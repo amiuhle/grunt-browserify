@@ -24,6 +24,12 @@ module.exports = function (grunt) {
       grunt.fail.warn(err);
     });
 
+    if(this.data.require) {
+      this.data.require.forEach(function (require) {
+        b.require(require, { expose: require });
+      });
+    }
+
     if (this.data.ignore) {
       grunt.file.expand({filter: 'isFile'}, this.data.ignore)
         .forEach(function (file) {
