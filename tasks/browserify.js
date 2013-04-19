@@ -26,6 +26,12 @@ module.exports = function (grunt) {
       grunt.fail.warn(err);
     });
 
+    if(this.data.require) {
+      this.data.require.forEach(function (require) {
+        b.require(require, { expose: require });
+      });
+    }
+
     var globals = opts.globals || {};
     for(var key in globals) {
       b.require(globals[key], { expose: key, entry: true });
